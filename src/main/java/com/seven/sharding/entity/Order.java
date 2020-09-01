@@ -28,6 +28,8 @@ public class Order implements Serializable {
     private int userId;
     
     private String status;
+
+    private long orderItemId;
     
     public long getOrderId() {
         return orderId;
@@ -52,7 +54,15 @@ public class Order implements Serializable {
     public void setStatus(final String status) {
         this.status = status;
     }
-    
+
+    public long getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(long orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+
     @Override
     public String toString() {
         return String.format("order_id: %s, user_id: %s, status: %s", orderId, userId, status);

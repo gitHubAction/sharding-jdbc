@@ -19,7 +19,14 @@ package com.seven.sharding.repository;
 
 import com.seven.sharding.entity.Order;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface MybatisOrderRepository extends CommonRepository<Order>{
+
+    List<Order> selectByOrderID(@Param("ids")List<Long> ids);
+
+    List<Order> selectJoin();
 }

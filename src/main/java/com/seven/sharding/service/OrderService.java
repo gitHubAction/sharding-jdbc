@@ -1,33 +1,28 @@
-package com.seven.sharding;
+package com.seven.sharding.service;
 
 import com.seven.sharding.entity.Order;
 import com.seven.sharding.repository.MybatisOrderRepository;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
-class ShardingApplicationTests {
-
+/**
+ * ClassName:    OrderService
+ * Package:    com.seven.sharding.service
+ * Datetime:    2020/8/31   11:08
+ * Author:   zsh
+ * Description:
+ */
+@Service
+public class OrderService {
     @Autowired
     private MybatisOrderRepository orderRepository;
 
-    @Test
-    void queryAll() {
-        List<Order> orders = orderRepository.selectAll();
-        for (Order order : orders) {
-            System.out.println(order);
-        }
-    }
-
-
-    @Test
     @Transactional
-    void insert() {
+    public void insert() {
         List<Long> ids = new ArrayList<>();
         for (int i = 1; i < 20; i++) {
             Order o = new Order();
@@ -48,10 +43,9 @@ class ShardingApplicationTests {
 
 
 
-    @Test
-//    @ShardingTransactionType(TransactionType.BASE)
+
     @Transactional
-    void insertBatch() {
+    public void insertBatch() {
         List<Order> ordersEve = new ArrayList<>();
         for (int i = 2; i < 20; i+=2) {
             Order o = new Order();
@@ -64,7 +58,7 @@ class ShardingApplicationTests {
         for (Order o : ordersEve) {
             System.out.println(o.getOrderId());
         }
-
+        int l = 1/0;
         System.out.println("Odd insert start----------");
 
         List<Order> orders = new ArrayList<>();
@@ -82,4 +76,11 @@ class ShardingApplicationTests {
 
     }
 
+
+    public void selectJoin(){
+        List<Order> orders = orderRepository.selectJoin();
+        for (Order o : orders) {
+            System.out.println(o.toString());
+        }
+    }
 }

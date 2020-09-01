@@ -28,6 +28,8 @@ public interface CommonRepository<T> {
     void truncateTable();
     
     Long insert(T entity);
+
+    Integer insertBatch(List<T> entity);
     
     void delete(Long id);
     

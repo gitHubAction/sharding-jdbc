@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seven.sharding.repository.MybatisOrderRepository">
     <resultMap id="baseResultMap" type="com.seven.sharding.entity.Order">
-        <result column="order_id" property="orderId" jdbcType="INTEGER"/>
+        <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+        <result column="order_item_id" property="orderItemId" jdbcType="BIGINT"/>
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="VARCHAR"/>
     </resultMap>
@@ -22,6 +23,13 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="orderId">
         INSERT INTO t_order (user_id, status) VALUES (#{userId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR});
     </insert>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="orderId">
+        INSERT INTO t_order (user_id, status) VALUES
+        <foreach collection="entity" item="order" separator=",">
+          (#{order.userId,jdbcType=INTEGER}, #{order.status,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
     
     <delete id="delete">
         DELETE FROM t_order WHERE order_id = #{orderId,jdbcType=INTEGER};
@@ -33,5 +41,19 @@
     
     <select id="selectRange" resultMap="baseResultMap">
         SELECT * FROM t_order WHERE order_id BETWEEN 200000000000000000 AND 400000000000000000
+    </select>
+
+
+    <select id="selectByOrderID" resultMap="baseResultMap">
+        SELECT user_id,status FROM t_order where order_id IN
+        <foreach collection="ids" open="(" close=")" item="orderId" separator=",">
+            #{orderId}
+        </foreach>
+        order by order_id;
+    </select>
+
+
+    <select id="selectJoin" resultMap="baseResultMap">
+        SELECT t.user_id,t.status FROM t_order t left join t_order_item i on t.order_id = i.order_id order by i.order_item_id
     </select>
 </mapper>
